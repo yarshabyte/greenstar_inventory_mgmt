@@ -1,7 +1,7 @@
 .PHONY: help venv install start shell dbshell \
-        makemigrations migrate collectstatic \
-        createsuperuser test check clean \
-	app name=
+	makemigrations migrate collectstatic \
+	createsuperuser test check clean \
+	app
 
 PYTHON := .venv/bin/python
 PIP := .venv/bin/pip
