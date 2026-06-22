@@ -14,7 +14,7 @@ help:
 	@echo "  venv             Create virtual environment"
 	@echo "  install          Install dependencies"
 	@echo "  init             Create venv, install deps & startproject"
-	@echo "  app name=x       Create new app"
+	@echo "  app <app_name>   Create new app"
 	@echo "  start            Run development server"
 	@echo "  shell            Open Django shell"
 	@echo "  dbshell          Open database shell"
