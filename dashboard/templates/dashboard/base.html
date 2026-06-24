@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Management{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .low-stock { color: red; font-weight: bold; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+        <div>
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    <div class="nav">
+        <a href="{% url 'dashboard:index' %}">Home</a>
+        <a href="{% url 'dashboard:product_list' %}">Products</a>
+        <a href="{% url 'dashboard:variant_list' %}">Variants</a>
+        <a href="{% url 'dashboard:variant_create' %}">Add Variant</a>
+        <a href="{% url 'dashboard:transaction_create' %}">New Transaction</a>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

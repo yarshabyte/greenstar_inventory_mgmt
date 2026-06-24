@@ -1,0 +1,14 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Inventory Dashboard</h1>
+<p>Welcome to simple inventory system.</p>
+
+<h2>Quick Stats</h2>
+<ul>
+    <li>Total Variants: {{ total_variants }}</li>
+    <li>Low Stock Items: {{ low_stock_count }}</li>
+</ul>
+{% endblock %}

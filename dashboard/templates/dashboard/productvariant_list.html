@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Product Variants{% endblock %}
+
+{% block content %}
+<h1>Product Variants</h1>
+
+<a href="{% url 'dashboard:variant_create' %}">+ Add New Variant</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Variant</th>
+            <th>SKU</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for variant in variants %}
+        <tr>
+            <td>{{ variant.product }}</td>
+            <td>{{ variant.name }}</td>
+            <td>{{ variant.sku }}</td>
+            <td>${{ variant.price }}</td>
+            <td class="{% if variant.is_low_stock %}low-stock{% endif %}">
+                {{ variant.current_stock }}
+            </td>
+            <td>{{ variant.is_deleted|yesno:"Deleted,Active" }}</td>
+            <td>
+                <a href="{% url 'dashboard:variant_update' variant.pk %}">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No variants found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

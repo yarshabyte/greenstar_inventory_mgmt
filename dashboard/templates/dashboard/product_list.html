@@ -1,0 +1,26 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h1>Product</h1>
+
+<a href="{% url 'dashboard:product_create' %}">+ Add New Product</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">No products found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
