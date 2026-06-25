@@ -1,0 +1,9 @@
+<form method="GET">
+    <input
+        type="text"
+        name="q"
+        placeholder="{{ search_placeholder|default:'Search...' }}"
+        value="{{ request.GET.q }}"
+    >
+    <button type="submit">Search</button>
+</form>

@@ -7,15 +7,8 @@
 
 <a href="{% url 'dashboard:variant_create' %}">+ Add New Variant</a>
 
-<form>
-    <input
-        method="GET"
-        name="q"
-        placeholder="Search products..."
-        value="{{ request.GET.q }}"
-    >
-    <button type="submit">Search</button>
-</form>
+<!-- components/search.html -->
+{% include "dashboard/components/search.html" with search_placeholder="Search variants..." %}
 
 <p>Total Variants: {{ variants|length }}</p>
 
@@ -53,4 +46,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- components/pagination.html -->
+{% include "dashboard/components/pagination.html" %}
+
 {% endblock %}

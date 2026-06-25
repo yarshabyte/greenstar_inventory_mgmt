@@ -67,6 +67,7 @@ class ProductListView(Search, ListView):
     model = Product
     template_name = "dashboard/product_list.html"
     context_object_name = "products"
+    paginate_by = 10
     search_fields = ["name"]
 
     def get_queryset(self):
@@ -82,6 +83,7 @@ class ProductVariantListView(Search, ListView):
     template_name = "dashboard/productvariant_list.html"
     context_object_name = "variants"
     search_fields = ["name", "sku", "product__name"]
+    paginate_by = 10
 
     def get_queryset(self):
         return (
