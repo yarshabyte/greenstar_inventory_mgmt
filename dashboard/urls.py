@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     IndexView,
+    PermanentDelete,
     ProductCreateView,
     ProductDeleteView,
     ProductListView,
@@ -10,8 +11,10 @@ from .views import (
     ProductVariantListView,
     ProductVariantCreateView,
     ProductVariantUpdateView,
+    RestoreItemView,
     StockTransactionListView,
-    StockTransactionCreateView
+    StockTransactionCreateView,
+    TrashListView
 )
 
 app_name = "dashboard"
@@ -25,7 +28,6 @@ urlpatterns = [
     path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_update"),
     path("products/<int:pk>/delete", ProductDeleteView.as_view(), name="product_delete"),
     path("products/<int:pk>/restore", ProductRestoreView.as_view(), name="product_restore"),
-    path("products/trash/", ProductTrashView.as_view(), name="product_trash"),
 
     # Variants
     path("variants/", ProductVariantListView.as_view(), name="variant_list"),
@@ -33,7 +35,11 @@ urlpatterns = [
     path("variants/<int:pk>/edit/", ProductVariantUpdateView.as_view(), name="variant_update"),
 
     # Transactions
-    # TODO: add transactions list section
     path("transactions/", StockTransactionListView.as_view(), name="transaction_list"),
-    path("transactions/add/", StockTransactionCreateView.as_view(), name="transaction_create")
+    path("transactions/add/", StockTransactionCreateView.as_view(), name="transaction_create"),
+
+    # Trash
+    path("trash/", TrashListView.as_view(), name="trash"),
+    path("trash/restore/<str:item_type>/<int:pk>/", RestoreItemView.as_view(), name="restore_item"),
+    path("trash/permanent-delete/<str:item_type>/<int:pk>/", PermanentDelete.as_view(), name="permanent_delete"),
 ]

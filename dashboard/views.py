@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db.models import Q, Count, QuerySet
-from django.http import request
+from django.http import Http404, request
 from django.shortcuts import _get_queryset, render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -11,7 +11,7 @@ from django.views.generic import (
     UpdateView
 )
 
-from .models import StockTransaction
+from .models import Category, StockTransaction
 from .forms import (
     Product,
     ProductForm,
@@ -107,6 +107,13 @@ class ProductListView(Search, ListView):
             .order_by("name")
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_products"] = (
+            Product.all_objects.count()
+        )
+        return context
+
 class ProductVariantListView(Search, ListView):
     model = ProductVariant
     template_name = "dashboard/productvariant_list.html"
@@ -185,3 +192,97 @@ class ProductTrashView(ListView):
 
     def get_queryset(self):
         return Product.all_objects.filter(is_deleted=True).order_by("name")
+
+class TrashListView(Search, ListView):
+    template_name = "dashboard/trash_list.html"
+    context_object_name = "trash_items"
+    paginate_by = 10
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        type_filter = self.request.GET.get("type")
+
+        items = []
+
+        if not type_filter or type_filter == "product":
+            qs = Product.all_objects.filter(is_deleted=True)
+            if query:
+                qs = qs.filter(name__icontains=query)
+            items.extend([{
+                "id": p.id,
+                "type": "product",
+                "name": p.name,
+                "updated_at": p.updated_at,
+                "obj": p
+            } for p in qs])
+
+        if not type_filter or type_filter == "variant":
+            qs = ProductVariant.all_objects.filter(is_deleted=True)
+            if query:
+                qs = qs.filter(Q(name__icontains=query) | Q(product__name__icontains=query))
+            items.extend([{
+                "id": v.id,
+                "type": "variant",
+                "name": f"{v.product.name} - {v.name}",
+                "updated_at": v.updated_at,
+                "obj": v
+            } for v in qs])
+
+        if not type_filter or type_filter == "category":
+            qs = Category.all_objects.filter(is_deleted=True)
+            if query:
+                qs = qs.filter(name__icontains=query)
+            items.extend([{
+                "id": c.id,
+                "type": "category",
+                "name": c.name,
+                "updated_at": c.updated_at,
+                "obj": c
+            } for c in qs])
+
+        items.sort(key=lambda x: x['updated_at'], reverse=True)
+        return items
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_deleted"] = (
+            Product.all_objects.filter(is_deleted=True).count() +
+            ProductVariant.all_objects.filter(is_deleted=True).count() +
+            Category.all_objects.filter(is_deleted=True).count()
+        )
+        context["type_filter"] = self.request.GET.get("type")
+        return context
+
+class RestoreItemView(View):
+    def post(self, request, item_type, pk):
+        try:
+            if item_type == "product":
+                item = Product.all_objects.get(pk=pk)
+            elif item_type == "variant":
+                item = ProductVariant.all_objects.get(pk=pk)
+            elif item_type == "category":
+                item = Category.all_objects.get(pk=pk)
+            else:
+                raise Http404
+            item.restore()
+            messages.success(request, f"{item_type.title()} restored successfully.")
+        except Exception as e:
+            messages.error(request, "Error responding item.")
+        return redirect("dashboard:trash")
+
+class PermanentDelete(View):
+    def post(self, request, item_type, pk):
+        try:
+            if item_type == "product":
+                item = Product.all_objects.get(pk=pk)
+            elif item_type == "variant":
+                item = ProductVariant.all_objects.get(pk=pk)
+            elif item_type == "category":
+                item = Category.all_objects.get(pk=pk)
+            else:
+                raise Http404
+            item.delete()
+            messages.success(request, f"{item_type.title()} permanently deleted.")
+        except Exception as e:
+            messages.error(request, "Error deleting item.")
+        return redirect("dashboard:trash")
+
