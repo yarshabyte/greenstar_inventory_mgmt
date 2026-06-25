@@ -2,7 +2,8 @@
 {% block title %}Trash{% endblock %}
 
 {% block content %}
-<h1>Trash <small>({{ total_deleted }} items)</small></h1>
+<!-- <h1>Trash <small>({{ total_deleted }} items)</small></h1> -->
+<h1>Trash</h1>
 
 {% include "dashboard/components/search.html" with search_placeholder="Search trash..." %}
 
@@ -12,6 +13,8 @@
     <a href="{% url 'dashboard:trash' %}?type=variant" class="btn {% if type_filter == 'variant' %}active{% endif %}">Variants</a>
     <a href="{% url 'dashboard:trash' %}?type=category" class="btn {% if type_filter == 'category' %}active{% endif %}">Categories</a>
 </div>
+
+{% include "dashboard/components/counter.html" with whichone="item" %}
 
 <table class="table">
     <thead>
