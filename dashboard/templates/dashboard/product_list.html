@@ -17,9 +17,12 @@
     <button type="submit">Search</button>
 </form>
 
+<p>Total Product: {{ products|length }}</p>
+
 <table>
     <thead>
         <tr>
+            <th>#</th>
             <th>Product name</th>
             <th>Variants</th>
         </tr>
@@ -27,6 +30,7 @@
     <tbody>
         {% for product in products %}
         <tr>
+            <td>{{ forloop.counter }}</td>
             <td>{{ product.name }}</td>
             <td>{{ product.variant_count }}</td>
         </tr>
