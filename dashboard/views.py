@@ -70,6 +70,9 @@ class ProductUpdateView(UpdateView):
         template_name = "dashboard/product_form.html"
         success_url = reverse_lazy("dashboard:product_list")
 
+        def get_queryset(self):
+            return Product.all_objects
+
         def form_valid(self, form):
             messages.success(self.request, "Product updated successfully.")
             return super().form_valid(form)
@@ -86,7 +89,8 @@ class ProductRestoreView(View):
         product = get_object_or_404(Product.all_objects, pk=pk)
         product.restore()
         messages.success(request, "Product restored.")
-        return redirect("dashboard:product_list")
+        referer = request.META.get("HTTP_REFERER")
+        return redirect(referer)
 
 class ProductListView(Search, ListView):
     model = Product
@@ -171,3 +175,13 @@ class StockTransactionCreateView(CreateView):
         except Exception as e:
             form.add_error(None, str(e))
             return self.form_invalid(form)
+
+class ProductTrashView(ListView):
+    model = Product
+    template_name = "dashboard/product_trash_list.html"
+    context_object_name = "products"
+    paginate_by = 10
+    search_fields = ["name"]
+
+    def get_queryset(self):
+        return Product.all_objects.filter(is_deleted=True).order_by("name")

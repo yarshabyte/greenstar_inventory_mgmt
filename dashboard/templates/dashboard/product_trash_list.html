@@ -1,11 +1,9 @@
 {% extends 'dashboard/base.html' %}
 
-{% block title %}Products{% endblock %}
+{% block title %}Trash{% endblock %}
 
 {% block content %}
-<h1>Product</h1>
-
-<a href="{% url 'dashboard:product_create' %}">+ Add New Product</a>
+<h1>Trash</h1>
 
 <!-- components/search.html -->
 {% include "dashboard/components/search.html" with search_placeholder="Search products..."%}
@@ -29,11 +27,9 @@
             <td>{{ product.variant_count }}</td>
             <td>
                 <a href="{% url 'dashboard:product_update' product.pk %}">Edit</a>
-                <form method="POST" action="{% url 'dashboard:product_delete' product.pk %}" style="display:inline;">
+                <form method="post" action="{% url 'dashboard:product_restore' product.pk %}" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" onClick="return confirm('Delete this product')">
-                        Delete
-                    </button>
+                    <button type="submit">Restore</button>
                 </form>
             </td>
         </tr>

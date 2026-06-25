@@ -4,5 +4,5 @@
         {% if page_obj.end_index != page_obj.paginator.count %}
             {{ page_obj.start_index }}-{{ page_obj.end_index }} of
         {% endif %}
-            {{ page_obj.paginator.count }} {{ whichone }}
+            {{ page_obj.paginator.count }} {{ whichone }}{% if page_obj.paginator.count != 1 %}s{% endif %}
 </p>

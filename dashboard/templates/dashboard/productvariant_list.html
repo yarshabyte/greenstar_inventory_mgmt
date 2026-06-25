@@ -10,7 +10,7 @@
 <!-- components/search.html -->
 {% include "dashboard/components/search.html" with search_placeholder="Search variants..." %}
 
-{% include "dashboard/components/counter.html" with whichone="variants" %}
+{% include "dashboard/components/counter.html" with whichone="variant" %}
 
 <table>
     <thead>
@@ -32,7 +32,7 @@
             <td>{{ variant.product }}</td>
             <td>{{ variant.name }}</td>
             <td>{{ variant.sku }}</td>
-            <td>${{ variant.price }}</td>
+            <td>Rs. {{ variant.price }}</td>
             <td class="{% if variant.is_low_stock %}low-stock{% endif %}">
                 {{ variant.current_stock }}
             </td>
