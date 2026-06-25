@@ -7,19 +7,15 @@
 
 <a href="{% url 'dashboard:variant_create' %}">+ Add New Variant</a>
 
-<form>
-    <input
-        method="GET"
-        name="q"
-        placeholder="Search products..."
-        value="{{ request.GET.q }}"
-    >
-    <button type="submit">Search</button>
-</form>
+<!-- components/search.html -->
+{% include "dashboard/components/search.html" with search_placeholder="Search variants..." %}
+
+{% include "dashboard/components/counter.html" with whichone="variants" %}
 
 <table>
     <thead>
         <tr>
+            <th>#</th>
             <th>Product</th>
             <th>Variant</th>
             <th>SKU</th>
@@ -32,6 +28,7 @@
     <tbody>
         {% for variant in variants %}
         <tr>
+            <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
             <td>{{ variant.product }}</td>
             <td>{{ variant.name }}</td>
             <td>{{ variant.sku }}</td>
@@ -49,4 +46,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- components/pagination.html -->
+{% include "dashboard/components/pagination.html" %}
+
 {% endblock %}

@@ -1,0 +1,8 @@
+<p>
+    Showing
+        <!-- INFO: haha just wasting energy on stupid things -->
+        {% if page_obj.end_index != page_obj.paginator.count %}
+            {{ page_obj.start_index }}-{{ page_obj.end_index }} of
+        {% endif %}
+            {{ page_obj.paginator.count }} {{ whichone }}
+</p>

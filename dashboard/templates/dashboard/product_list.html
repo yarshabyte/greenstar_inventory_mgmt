@@ -7,19 +7,15 @@
 
 <a href="{% url 'dashboard:product_create' %}">+ Add New Product</a>
 
-<form method="GET">
-    <input
-        type="text"
-        name="q"
-        placeholder="Search products..."
-        value="{{ request.GET.q }}"
-    >
-    <button type="submit">Search</button>
-</form>
+<!-- components/search.html -->
+{% include "dashboard/components/search.html" with search_placeholder="Search products..."%}
+
+{% include "dashboard/components/counter.html" with whichone="products" %}
 
 <table>
     <thead>
         <tr>
+            <th>#</th>
             <th>Product name</th>
             <th>Variants</th>
         </tr>
@@ -27,6 +23,7 @@
     <tbody>
         {% for product in products %}
         <tr>
+            <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
             <td>{{ product.name }}</td>
             <td>{{ product.variant_count }}</td>
         </tr>
@@ -35,4 +32,8 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- components/pagination.html -->
+{% include "dashboard/components/pagination.html" %}
+
 {% endblock %}
