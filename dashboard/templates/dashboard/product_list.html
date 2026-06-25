@@ -7,16 +7,28 @@
 
 <a href="{% url 'dashboard:product_create' %}">+ Add New Product</a>
 
+<form method="GET">
+    <input
+        type="text"
+        name="q"
+        placeholder="Search products..."
+        value="{{ request.GET.q }}"
+    >
+    <button type="submit">Search</button>
+</form>
+
 <table>
     <thead>
         <tr>
             <th>Product name</th>
+            <th>Variants</th>
         </tr>
     </thead>
     <tbody>
         {% for product in products %}
         <tr>
             <td>{{ product.name }}</td>
+            <td>{{ product.variant_count }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="7">No products found.</td></tr>

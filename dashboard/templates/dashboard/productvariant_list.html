@@ -7,6 +7,16 @@
 
 <a href="{% url 'dashboard:variant_create' %}">+ Add New Variant</a>
 
+<form>
+    <input
+        method="GET"
+        name="q"
+        placeholder="Search products..."
+        value="{{ request.GET.q }}"
+    >
+    <button type="submit">Search</button>
+</form>
+
 <table>
     <thead>
         <tr>

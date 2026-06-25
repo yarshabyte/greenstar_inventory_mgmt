@@ -1,5 +1,7 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.db.models import Q, Count, QuerySet
+from django.http import request
+from django.shortcuts import _get_queryset, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     TemplateView,
@@ -32,6 +34,25 @@ class IndexView(TemplateView):
 
         return context
 
+# helper search
+class Search:
+    search_fields = []
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        query = self.request.GET.get("q")
+
+        if query:
+            q_object = Q()
+
+            for field in self.search_fields:
+                q_object |= Q(**{f"{field}__icontains": query})
+
+            queryset = queryset.filter(q_object)
+
+        return queryset
+
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
@@ -42,25 +63,34 @@ class ProductCreateView(CreateView):
         messages.success(self.request, "Product created successfully")
         return super().form_valid(form)
 
-class ProductListView(ListView):
+class ProductListView(Search, ListView):
     model = Product
     template_name = "dashboard/product_list.html"
     context_object_name = "products"
-
-    def get_queryset(self):
-        return (Product.objects.order_by("name"))
-
-class ProductVariantListView(ListView):
-    model = ProductVariant
-    template_name = "dashboard/productvariant_list.html"
-    context_object_name = "variants"
+    search_fields = ["name"]
 
     def get_queryset(self):
         return (
-            ProductVariant.objects
+            super()
+            .get_queryset()
+            .annotate(variant_count=Count("variants"))
+            .order_by("name")
+        )
+
+class ProductVariantListView(Search, ListView):
+    model = ProductVariant
+    template_name = "dashboard/productvariant_list.html"
+    context_object_name = "variants"
+    search_fields = ["name", "sku", "product__name"]
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
             .select_related("product", "category")
             .order_by("product__name", "name")
         )
+
 
 class ProductVariantCreateView(CreateView):
     model = ProductVariant
