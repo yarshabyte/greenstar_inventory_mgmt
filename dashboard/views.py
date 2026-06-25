@@ -183,16 +183,6 @@ class StockTransactionCreateView(CreateView):
             form.add_error(None, str(e))
             return self.form_invalid(form)
 
-class ProductTrashView(ListView):
-    model = Product
-    template_name = "dashboard/product_trash_list.html"
-    context_object_name = "products"
-    paginate_by = 10
-    search_fields = ["name"]
-
-    def get_queryset(self):
-        return Product.all_objects.filter(is_deleted=True).order_by("name")
-
 class TrashListView(Search, ListView):
     template_name = "dashboard/trash_list.html"
     context_object_name = "trash_items"

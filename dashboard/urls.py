@@ -6,7 +6,6 @@ from .views import (
     ProductDeleteView,
     ProductListView,
     ProductRestoreView,
-    ProductTrashView,
     ProductUpdateView,
     ProductVariantListView,
     ProductVariantCreateView,
