@@ -10,7 +10,7 @@
 <!-- components/search.html -->
 {% include "dashboard/components/search.html" with search_placeholder="Search variants..." %}
 
-<p>Total Variants: {{ variants|length }}</p>
+{% include "dashboard/components/counter.html" with whichone="variants" %}
 
 <table>
     <thead>
@@ -28,7 +28,7 @@
     <tbody>
         {% for variant in variants %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
             <td>{{ variant.product }}</td>
             <td>{{ variant.name }}</td>
             <td>{{ variant.sku }}</td>
