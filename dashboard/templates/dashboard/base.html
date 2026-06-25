@@ -15,6 +15,15 @@
     </style>
 </head>
 <body>
+    <div class="nav">
+        <a href="{% url 'dashboard:index' %}">Home</a>
+        <a href="{% url 'dashboard:product_list' %}">Products</a>
+        <a href="{% url 'dashboard:variant_list' %}">Variants</a>
+        <a href="{% url 'dashboard:variant_create' %}">Add Variant</a>
+        <a href="{% url 'dashboard:transaction_list' %}">Transactions</a>
+        <a href="{% url 'dashboard:transaction_create' %}">New Transaction</a>
+    </div>
+
     {% if messages %}
         {% for message in messages %}
         <div>
@@ -22,13 +31,6 @@
         </div>
         {% endfor %}
     {% endif %}
-    <div class="nav">
-        <a href="{% url 'dashboard:index' %}">Home</a>
-        <a href="{% url 'dashboard:product_list' %}">Products</a>
-        <a href="{% url 'dashboard:variant_list' %}">Variants</a>
-        <a href="{% url 'dashboard:variant_create' %}">Add Variant</a>
-        <a href="{% url 'dashboard:transaction_create' %}">New Transaction</a>
-    </div>
 
     {% block content %}
     {% endblock %}

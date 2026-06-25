@@ -18,6 +18,7 @@
             <th>#</th>
             <th>Product name</th>
             <th>Variants</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +27,15 @@
             <td>{{ page_obj.start_index|add:forloop.counter0 }}</td>
             <td>{{ product.name }}</td>
             <td>{{ product.variant_count }}</td>
+            <td>
+                <a href="{% url 'dashboard:product_update' product.pk %}">Edit</a>
+                <form method="POST" action="{% url 'dashboard:product_delete' product.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onClick="return confirm('Delete this product')">
+                        Delete
+                    </button>
+                </form>
+            </td>
         </tr>
         {% empty %}
         <tr><td colspan="7">No products found.</td></tr>

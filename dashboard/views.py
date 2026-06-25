@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.db.models import Q, Count, QuerySet
 from django.http import request
-from django.shortcuts import _get_queryset, render, redirect
+from django.shortcuts import _get_queryset, render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import (
+    View,
     TemplateView,
     ListView,
     CreateView,
@@ -57,11 +58,35 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = "dashboard/product_form.html"
-    success_url = reverse_lazy("dashboard:variant_list")
+    success_url = reverse_lazy("dashboard:product_list")
 
     def form_valid(self, form):
         messages.success(self.request, "Product created successfully")
         return super().form_valid(form)
+
+class ProductUpdateView(UpdateView):
+        model = Product
+        form_class = ProductForm
+        template_name = "dashboard/product_form.html"
+        success_url = reverse_lazy("dashboard:product_list")
+
+        def form_valid(self, form):
+            messages.success(self.request, "Product updated successfully.")
+            return super().form_valid(form)
+
+class ProductDeleteView(View):
+    def post(self, request, pk):
+        product = get_object_or_404(Product.all_objects, pk=pk)
+        product.soft_delete()
+        messages.success(request, "Product deleted successfully")
+        return redirect("dashboard:product_list")
+
+class ProductRestoreView(View):
+    def post(self, request, pk):
+        product = get_object_or_404(Product.all_objects, pk=pk)
+        product.restore()
+        messages.success(request, "Product restored.")
+        return redirect("dashboard:product_list")
 
 class ProductListView(Search, ListView):
     model = Product
@@ -114,11 +139,25 @@ class ProductVariantUpdateView(UpdateView):
         messages.success(self.request, "Variant updated successfully")
         return super().form_valid(form)
 
+class StockTransactionListView(Search, ListView):
+    model = StockTransaction
+    template_name = "dashboard/transaction_list.html"
+    context_object_name = "transactions"
+    paginate_by = 10
+    search_fields = ["variants", "transaction__type"]
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .order_by("variant")
+        )
+
 class StockTransactionCreateView(CreateView):
     model = StockTransaction
     form_class = StockTransactionForm
     template_name = "dashboard/stocktransaction_form.html"
-    success_url = reverse_lazy("dashboard:variant_list")
+    success_url = reverse_lazy("dashboard:transaction_list")
 
     def form_valid(self, form):
         try:
